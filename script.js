@@ -83,8 +83,41 @@ function updateThemeChanger() {
 
 themeChanger.addEventListener("click", () => {
   document.body.classList.toggle("dark");
+  if (document.body.classList.contains("dark")) {
+    localStorage.setItem("theme", "dark");
+  } else {
+    localStorage.setItem("theme", "light");
+  }
   updateThemeChanger();
 });
 
+// Listen for localStorage changes to sync theme across tabs
+window.addEventListener("storage", (event) => {
+  if (event.key === "theme") {
+    if (event.newValue === "dark") {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+    updateThemeChanger();
+  }
+});
+
 // Initialize themeChanger on page load
-updateThemeChanger();
+
+function applySavedTheme() {
+  let savedTheme = localStorage.getItem("theme");
+  if (!savedTheme) {
+    // Default to dark mode if no preference saved
+    savedTheme = "dark";
+    localStorage.setItem("theme", savedTheme);
+  }
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark");
+  } else {
+    document.body.classList.remove("dark");
+  }
+  updateThemeChanger();
+}
+
+applySavedTheme();

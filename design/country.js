@@ -1,5 +1,3 @@
-// Existing code unchanged above
-
 const countryName = new URLSearchParams(location.search).get("name");
 const flagImage = document.querySelector(".country-details img");
 const countryNameH2 = document.querySelector(".country-details h2");
@@ -58,7 +56,7 @@ fetch(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
     console.error("Error fetching country data:", error);
   });
 
-// Theme toggling with persistence for country.html
+// Theme toggling with persistence and synchronization for country.html
 
 const themeChanger = document.querySelector(".theme-changer");
 
@@ -99,6 +97,18 @@ if (themeChanger) {
     updateThemeChanger();
   });
 }
+
+// Listen for localStorage changes to sync theme across tabs
+window.addEventListener("storage", (event) => {
+  if (event.key === "theme") {
+    if (event.newValue === "dark") {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+    updateThemeChanger();
+  }
+});
 
 // Apply saved theme on page load
 applySavedTheme();
