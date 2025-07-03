@@ -1,3 +1,5 @@
+// Existing code unchanged above
+
 const countryName = new URLSearchParams(location.search).get("name");
 const flagImage = document.querySelector(".country-details img");
 const countryNameH2 = document.querySelector(".country-details h2");
@@ -55,3 +57,48 @@ fetch(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
   .catch((error) => {
     console.error("Error fetching country data:", error);
   });
+
+// Theme toggling with persistence for country.html
+
+const themeChanger = document.querySelector(".theme-changer");
+
+console.log("themeChanger element:", themeChanger);
+
+function updateThemeChanger() {
+  if (document.body.classList.contains("dark")) {
+    themeChanger.innerHTML = '<i class="fa-regular fa-sun"></i>&nbsp;&nbsp;Light Mode';
+  } else {
+    themeChanger.innerHTML = '<i class="fa-regular fa-moon"></i>&nbsp;&nbsp;Dark Mode';
+  }
+  console.log("updateThemeChanger called. Current mode:", document.body.classList.contains("dark") ? "dark" : "light");
+}
+
+function applySavedTheme() {
+  let savedTheme = localStorage.getItem("theme");
+  if (!savedTheme) {
+    // Default to dark mode if no preference saved
+    savedTheme = "dark";
+    localStorage.setItem("theme", savedTheme);
+  }
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark");
+  } else {
+    document.body.classList.remove("dark");
+  }
+  updateThemeChanger();
+}
+
+if (themeChanger) {
+  themeChanger.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    if (document.body.classList.contains("dark")) {
+      localStorage.setItem("theme", "dark");
+    } else {
+      localStorage.setItem("theme", "light");
+    }
+    updateThemeChanger();
+  });
+}
+
+// Apply saved theme on page load
+applySavedTheme();
